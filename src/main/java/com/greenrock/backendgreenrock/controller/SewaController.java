@@ -35,7 +35,7 @@ public class SewaController {
 
     @GetMapping("/lihat/{id_user}")
     public ResponseEntity<Object> view(@PathVariable("id_user") String id_user){
-        List<Object> cekData = em.createNativeQuery("SELECT u.nama_lengkap AS penyewa, p.nama_barang, p.lama_sewa, p.tgl_sewa, p.Tgl_kembali, p.status FROM `t_penyewaan` p, tbl_user u WHERE p.user_id=u.id_user AND date(p.tgl_sewa) = date(now()) AND u.id_user=:id_user")
+        List<Object> cekData = em.createNativeQuery("SELECT nama_barang,lama_sewa,DATE_FORMAT(tgl_sewa, '%d-%m-%Y') AS tgl_sewa,Tgl_kembali FROM `t_penyewaan` WHERE user_id=:id_user AND date(tgl_sewa) = date(now())")
                 .setParameter("id_user",id_user)
                 .getResultList();
 
@@ -45,12 +45,10 @@ public class SewaController {
         for (Object sewa : cekData){
             Object[] sewaArrayObj = (Object[]) sewa;
             JSONObject js = new JSONObject();
-             js.put("nama_pemesan",sewaArrayObj[0]);
-         js.put("nama_barang",sewaArrayObj[1]);
-         js.put("lama_sewa",sewaArrayObj[2]);
-         js.put("tgl_sewa",sewaArrayObj[3]);
-         js.put("tgl_kembali",sewaArrayObj[4]);
-         js.put("status",sewaArrayObj[5]);
+             js.put("nama_barang",sewaArrayObj[0]);
+         js.put("lama_sewa",sewaArrayObj[1]);
+         js.put("tgl_sewa",sewaArrayObj[2]);
+         js.put("tgl_kembali",sewaArrayObj[3]);
          jsonArray.add(js);
 
         }
