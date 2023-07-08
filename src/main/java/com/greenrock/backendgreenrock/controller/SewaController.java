@@ -1,6 +1,8 @@
 package com.greenrock.backendgreenrock.controller;
 
 import com.greenrock.backendgreenrock.dto.SewaDto;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+
 import java.util.List;
 
 @RestController
