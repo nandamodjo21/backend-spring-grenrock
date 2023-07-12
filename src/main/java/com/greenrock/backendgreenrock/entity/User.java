@@ -1,7 +1,5 @@
 package com.greenrock.backendgreenrock.entity;
 
-
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,11 +10,12 @@ import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
-
 @Entity
 @Table(name = "tbl_user")
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -51,17 +50,7 @@ public class User {
     @Column(name = "date_created", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateCreated;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Penyewa> penyewas;
-
-
-
-
-
-
-
-
-
-
+    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // private List<Penyewa> penyewas;
 
 }

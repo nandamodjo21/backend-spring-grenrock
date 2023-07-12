@@ -1,0 +1,1 @@
+SELECT nama_barang, lama_sewa FROM t_penyewaan WHERE user_id = '758d1de7-2065-11ee-83dc-0242ac120002' AND date(tgl_sewa) = date(now());

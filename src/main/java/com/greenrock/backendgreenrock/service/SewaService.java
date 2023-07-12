@@ -1,12 +1,12 @@
-package com.greenrock.backendgreenrock.service;
+// package com.greenrock.backendgreenrock.service;
 
-import com.greenrock.backendgreenrock.entity.Penyewa;
+// import com.greenrock.backendgreenrock.entity.Penyewa;
 
-import java.util.List;
+// import java.util.List;
 
-public interface SewaService {
+// public interface SewaService {
 
-    List<Penyewa> findSewa();
+// List<Penyewa> findSewa();
 
-    Penyewa saveSewa(Penyewa penyewa);
-}
+// Penyewa saveSewa(Penyewa penyewa);
+// }

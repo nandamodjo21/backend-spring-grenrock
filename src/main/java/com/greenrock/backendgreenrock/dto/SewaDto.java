@@ -38,4 +38,13 @@ public class SewaDto {
     private String barang;
     private String lamaSewa;
     private String tglKembali;
+    private int stok;
+
+    public int getStok() {
+        return stok;
+    }
+
+    public void setStok(int stok) {
+        this.stok = stok;
+    }
 }
