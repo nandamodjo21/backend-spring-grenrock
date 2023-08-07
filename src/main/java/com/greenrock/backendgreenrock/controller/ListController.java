@@ -26,7 +26,7 @@ public class ListController {
     @GetMapping("/lihat/{nik}")
     public ResponseEntity<Object> view(@PathVariable("nik") String nik) {
         List<Object> cekData = em.createNativeQuery(
-                "SELECT p.nama_barang,p.lama_sewa FROM t_penyewaan p, tbl_user u WHERE p.user_id=u.id_user AND u.nik=:nik AND date(p.tgl_sewa) = date(now());")
+                "SELECT p.nama_barang,p.stok,p.lama_sewa,DATE_FORMAT(p.tgl_sewa, '%d-%m-%Y') AS tgl_sewa,t.total_bayar, p.status FROM t_total t, `t_penyewaan` p, tbl_user u WHERE t.id_penyewa=p.id_penyewa AND p.user_id=u.id_user AND u.nik=:nik")
                 .setParameter("nik", nik)
                 .getResultList();
 
@@ -37,7 +37,11 @@ public class ListController {
             Object[] sewaArrayObj = (Object[]) sewa;
             JSONObject js = new JSONObject();
             js.put("nama_barang", sewaArrayObj[0]);
-            js.put("lama_sewa", sewaArrayObj[1]);
+            js.put("stok", sewaArrayObj[1]);
+            js.put("lama_sewa", sewaArrayObj[2]);
+            js.put("tgl_sewa", sewaArrayObj[3]);
+            js.put("total_bayar", sewaArrayObj[4]);
+            js.put("status", sewaArrayObj[5]);
 
             jsonArray.add(js);
 
@@ -45,6 +49,29 @@ public class ListController {
         res.put("data", jsonArray);
         res.put("code", 1);
         return new ResponseEntity<>(res, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/total/{id_penyewa}")
+    public ResponseEntity<Object> lihat(@PathVariable("id_penyewa") String id_penyewa) {
+        List<Object> cek = em.createNativeQuery(
+                "SELECT t.id_total,t.total_bayar FROM `t_total` t, t_penyewaan p WHERE p.id_penyewa=t.id_penyewa")
+                .getResultList();
+        JSONObject js = new JSONObject();
+
+        JSONArray jsonArray = new JSONArray();
+
+        for (Object object : cek) {
+            Object[] totalObject = (Object[]) object;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id_total", totalObject[0]);
+            jsonObject.put("total_bayar", totalObject[1]);
+            jsonArray.add(jsonObject);
+        }
+
+        js.put("data", jsonArray);
+        js.put("code", 1);
+        return new ResponseEntity<Object>(js, HttpStatus.OK);
 
     }
 

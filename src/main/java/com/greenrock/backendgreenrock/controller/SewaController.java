@@ -22,12 +22,11 @@ public class SewaController {
     @PostMapping("/add")
     public Object save(@RequestBody SewaDto sewaDto) {
         em.createNativeQuery(
-                "INSERT INTO `t_penyewaan` (`id_penyewa`, `user_id`, `nama_barang`,`stok`, `lama_sewa`, `tgl_sewa`, `Tgl_kembali`, `status`) VALUES (UUID(), :id_user, :nama_barang, :stok, :lama_sewa, now(), :tgl_kembali, '0');")
+                "INSERT INTO `t_penyewaan` (`id_penyewa`, `user_id`, `nama_barang`, `stok`, `lama_sewa`, `tgl_sewa`, `status`, `total`) VALUES (UUID(), :id_user, :nama_barang, :stok, :lama_sewa, CURRENT_TIMESTAMP, '0', NULL);")
                 .setParameter("id_user", sewaDto.getUser())
                 .setParameter("nama_barang", sewaDto.getBarang())
                 .setParameter("stok", sewaDto.getStok())
                 .setParameter("lama_sewa", sewaDto.getLamaSewa())
-                .setParameter("tgl_kembali", sewaDto.getTglKembali())
                 .executeUpdate();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 1);
@@ -38,7 +37,7 @@ public class SewaController {
     @GetMapping("/lihat/{id_user}")
     public ResponseEntity<Object> view(@PathVariable("id_user") String id_user) {
         List<Object> cekData = em.createNativeQuery(
-                "SELECT nama_barang,stok,lama_sewa,DATE_FORMAT(tgl_sewa, '%d-%m-%Y') AS tgl_sewa,Tgl_kembali, status FROM `t_penyewaan` WHERE user_id=:id_user AND date(tgl_sewa) = date(now())")
+                "SELECT nama_barang,stok,lama_sewa,DATE_FORMAT(tgl_sewa, '%d-%m-%Y') AS tgl_sewa, status, user_id FROM `t_penyewaan` WHERE user_id=:id_user")
                 .setParameter("id_user", id_user)
                 .getResultList();
 
@@ -52,8 +51,8 @@ public class SewaController {
             js.put("stok", sewaArrayObj[1]);
             js.put("lama_sewa", sewaArrayObj[2]);
             js.put("tgl_sewa", sewaArrayObj[3]);
-            js.put("tgl_kembali", sewaArrayObj[4]);
-            js.put("status", sewaArrayObj[5]);
+            js.put("status", sewaArrayObj[4]);
+            js.put("id_user", sewaArrayObj[5]);
             jsonArray.add(js);
 
         }
