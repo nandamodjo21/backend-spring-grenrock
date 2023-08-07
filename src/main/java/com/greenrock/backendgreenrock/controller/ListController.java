@@ -55,7 +55,7 @@ public class ListController {
     @GetMapping("/total/{id_penyewa}")
     public ResponseEntity<Object> lihat(@PathVariable("id_penyewa") String id_penyewa) {
         List<Object> cek = em.createNativeQuery(
-                "SELECT t.id_total,t.total_bayar FROM `t_total` t, t_penyewaan p WHERE p.id_penyewa=t.id_penyewa")
+                "SELECT t.id_total,t.total_bayar FROM `t_total` t, t_penyewaan p WHERE p.id_penyewa=t.id_penyewa order by t.id_total desc")
                 .getResultList();
         JSONObject js = new JSONObject();
 
