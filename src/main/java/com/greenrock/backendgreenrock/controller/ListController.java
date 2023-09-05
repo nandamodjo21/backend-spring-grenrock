@@ -26,7 +26,7 @@ public class ListController {
     @GetMapping("/lihat/{nik}")
     public ResponseEntity<Object> view(@PathVariable("nik") String nik) {
         List<Object> cekData = em.createNativeQuery(
-                "SELECT p.nama_barang,p.stok,p.lama_sewa,DATE_FORMAT(p.tgl_sewa, '%d-%m-%Y') AS tgl_sewa,t.total_bayar, p.status FROM t_total t, `t_penyewaan` p, tbl_user u WHERE t.id_penyewa=p.id_penyewa AND p.user_id=u.id_user AND u.nik=:nik")
+                "SELECT p.nama_barang,p.stok,CONCAT(p.lama_sewa,' Hari'),DATE_FORMAT(p.tgl_sewa, '%d-%m-%Y') AS tgl_sewa,CONCAT('Rp. ', FORMAT(t.total_bayar, 0)) AS formatted_total_bayar, p.status,t.id_penyewa FROM t_total t, `t_penyewaan` p, tbl_user u WHERE t.id_penyewa=p.id_penyewa AND p.user_id=u.id_user AND u.nik=:nik AND date(p.tgl_sewa) = date(now())")
                 .setParameter("nik", nik)
                 .getResultList();
 
@@ -42,20 +42,22 @@ public class ListController {
             js.put("tgl_sewa", sewaArrayObj[3]);
             js.put("total_bayar", sewaArrayObj[4]);
             js.put("status", sewaArrayObj[5]);
+            js.put("id_penyewa", sewaArrayObj[6]);
 
             jsonArray.add(js);
 
         }
         res.put("data", jsonArray);
         res.put("code", 1);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(res.toJSONString());
 
     }
 
     @GetMapping("/total/{id_penyewa}")
     public ResponseEntity<Object> lihat(@PathVariable("id_penyewa") String id_penyewa) {
         List<Object> cek = em.createNativeQuery(
-                "SELECT t.id_total,t.total_bayar FROM `t_total` t, t_penyewaan p WHERE p.id_penyewa=t.id_penyewa order by t.id_total desc")
+                "SELECT t.id_total,CONCAT('Rp. ', FORMAT(t.total_bayar, 0)) AS formatted_total_bayar FROM `t_total` t, t_penyewaan p WHERE p.id_penyewa=t.id_penyewa AND p.id_penyewa=:id_penyewa")
+                .setParameter("id_penyewa", id_penyewa)
                 .getResultList();
         JSONObject js = new JSONObject();
 
