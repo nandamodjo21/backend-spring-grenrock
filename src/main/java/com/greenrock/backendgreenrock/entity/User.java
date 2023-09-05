@@ -46,6 +46,8 @@ public class User {
     @Column(name = "nik")
     private String nik;
 
+    private String imagePath;
+
     @CreationTimestamp
     @Column(name = "date_created", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateCreated;
