@@ -37,7 +37,7 @@ public class SewaController {
     @GetMapping("/lihat/{id_user}")
     public ResponseEntity<Object> view(@PathVariable("id_user") String id_user) {
         List<Object> cekData = em.createNativeQuery(
-                "SELECT p.nama_barang,p.stok,p.lama_sewa,DATE_FORMAT(p.tgl_sewa, '%d-%m-%Y') AS tgl_sewa,p.status,p.user_id FROM t_total t, `t_penyewaan` p WHERE t.id_penyewa=p.id_penyewa AND p.user_id=:id_user ORDER BY t.id_total DESC LIMIT 1;")
+                "SELECT p.nama_barang,p.stok,CONCAT(p.lama_sewa,' Hari'),DATE_FORMAT(p.tgl_sewa, '%d-%m-%Y') AS tgl_sewa,p.status,t.id_penyewa FROM t_total t, `t_penyewaan` p WHERE t.id_penyewa=p.id_penyewa AND p.user_id=:id_user ORDER BY t.id_total DESC LIMIT 1;")
                 .setParameter("id_user", id_user)
                 .getResultList();
 
@@ -52,7 +52,7 @@ public class SewaController {
             js.put("lama_sewa", sewaArrayObj[2]);
             js.put("tgl_sewa", sewaArrayObj[3]);
             js.put("status", sewaArrayObj[4]);
-            js.put("id_user", sewaArrayObj[5]);
+            js.put("id_penyewa", sewaArrayObj[5]);
             jsonArray.add(js);
 
         }
